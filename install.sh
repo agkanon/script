@@ -13,7 +13,9 @@ echo "Installing................................Pre-requisite"
 sudo yum install -y yum-utils device-mapper-persistent-data lvm2 curl wget git
 
 # git clone 
+echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
 git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git && cd single-k8s-k3d-deployment
+echo "Cloning ..................................Done"
 
 # Configure docker repository
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
