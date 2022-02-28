@@ -10,7 +10,10 @@ sudo yum -y remove docker docker-common docker-selinux docker-engine
 
 # Install required packages
 echo "Installing................................Pre-requisite"
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2 curl wget
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2 curl wget git
+
+# git clone 
+git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git && cd single-k8s-k3d-deployment
 
 # Configure docker repository
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
