@@ -3,9 +3,8 @@
 # Remove any old versions
 
 DEPLOY_DIR=deployment/insightdb
-kubectl=/usr/local/bin/kubectl
-helm=/usr/local/bin/helm
-k3d=/usr/local/bin/k3d
+KUBECTL_LOCATION=/usr/local/bin/kubectl
+K3D_LOCATION=/usr/local/bin/k3d
 
 echo "Removing................................. old packages"
 sudo yum -y remove docker docker-common docker-selinux docker-engine
@@ -23,7 +22,7 @@ sudo yum install -y yum-utils device-mapper-persistent-data lvm2 curl wget git
 if [ $? -eq 0 ]; then
      echo “Success,  Pre-requisite installation Done”
 else
-     echo “Failed, Please check your internet connection.”
+     echo “Pre-requisite installation Failed, Please re-run this script again.”
      exit 1
 fi
 
@@ -48,28 +47,12 @@ echo "Installation  --------------------------------Complete"
 
 # Download the latest release kubectl
 echo "Download the latest release kubectl...................KUBECTL"
-if [[ -f "$kubectl" ]]; then
+if [[ -f "$KUBECTL_LOCATION" ]]; then
     echo "kubectl already exists."
                 else curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" &&
                 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl &&
                 echo "kubectl>>>>>>>>>Installation>>>>>>>>Done"
 fi
-
-# Description: Install helm
-if [[ -f "$helm" ]]; then
-    echo "helm already exists."
-                else wget https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz &&
-                tar -xvf helm-v3.6.3-linux-amd64.tar.gz &&
-                mv linux-amd64/helm /usr/local/bin/helm &&
-                echo "helm >>>>>>>>Installation>>>>>>>>>> Done" &&
-                helm version
-fi
-
-# Add Repo
-echo "Adding.....................................HELM STABLE REPO"
-helm repo add stable https://charts.helm.sh/stable && 
-helm repo add kong https://charts.konghq.com &&
-helm repo update
 
 # git clone 
 echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
@@ -79,7 +62,7 @@ if [ $? -eq 0 ]; then
          cd single-k8s-k3d-deployment
          echo git Project cloning done
      else
-          echo Please Create proper authentication.
+          echo You have not proper permission for this Project, Please communicate with concern person.
    exit 1
 fi
 
@@ -88,7 +71,7 @@ fi
 echo "Download k3D binary x64..................................K3D"
 
 k3d=/usr/local/bin/k3d
-if [[ -f "$k3d" ]]; then
+if [[ -f "$K3D_LOCATION" ]]; then
     echo "k3d already exists."
                 else curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
                 echo "k3d>>>>>>>>>Installation>>>>>>>>Done"
@@ -123,7 +106,7 @@ else
 fi
 kubectl rollout status deployment mysql 
 if [ $? -eq 0 ]; then
-   echo MYSQL rollout Done, Please go ahead
+   echo deployment MYSQL successfully rolled out, Please go ahead
 else
    echo Please wait or re-check image pulling situation or
    kubectl delete -f $DEPLOY_DIR/mysql_deployment.yaml 
@@ -144,7 +127,7 @@ else
 fi
 kubectl rollout status deployment nginx --timeout 120s
 if [ $? -eq 0 ]; then
-   echo NGINX rollout Done, Please go ahead
+   echo deployment NGINX successfully rolled out, Please go ahead
 else
    echo Please wait or re-check image pulling situation.
    exit 1
