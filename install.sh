@@ -31,7 +31,12 @@ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/dock
 # Install Docker-ce
 echo "Installing ......................................DOCKER"
 sudo yum install docker-ce -y
-echo "Docker Install.....................................Done"
+if [ $? -eq 0 ]; then
+   echo "Docker Install.....................................Done"
+else
+   echo Please check your internet connectivity 
+fi
+
 # Start Docker
 sudo systemctl start docker
 sudo systemctl enable docker
