@@ -109,7 +109,7 @@ else
 fi
 
 
-echo "To check cluster Please hit .........."kubectl get no"..........."
+echo "To check cluster Please hit another terminal .........."kubectl get no"..........."
 kubectl get no
 
 ## Description: Set up MySQL Community Release 5.7
