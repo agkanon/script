@@ -70,7 +70,7 @@ fi
 # Download the latest release K3D
 echo "Download k3D binary x64..................................K3D"
 
-k3d=/usr/local/bin/k3d
+
 if [[ -f "$K3D_LOCATION" ]]; then
     echo "k3d already exists."
                 else curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
