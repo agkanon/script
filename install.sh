@@ -7,14 +7,14 @@ kubectl=/usr/local/bin/kubectl
 helm=/usr/local/bin/helm
 k3d=/usr/local/bin/k3d
 
-# echo "Removing................................. old packages"
-# sudo yum -y remove docker docker-common docker-selinux docker-engine
-# if [ $? -eq 0 ]; then
-#    echo OLD Packages Removed
-# else
-#    echo FAIL 
-#    exit 1
-# fi
+echo "Removing................................. old packages"
+sudo yum -y remove docker docker-common docker-selinux docker-engine
+if [ $? -eq 0 ]; then
+   echo OLD Packages Removed
+else
+   echo FAIL 
+   exit 1
+fi
 
 # Install required packages
 echo "Installing................................Pre-requisite"
@@ -116,7 +116,7 @@ kubectl get no
 
 kubectl apply -f $DEPLOY_DIR/mysql_deployment.yaml 
 if [ $? -eq 0 ]; then
-   echo MYSQL Apply Done, Please wait
+   echo MYSQL Apply Done, Please wait or describe another terminal this pod 'kubectl describe po mysql'
 else
    echo Please check status
    exit 1
@@ -137,7 +137,7 @@ echo "Plese execute 'kubectl get po -o wide', when pod is running state then exe
 echo "Deploying...............................................NGINX POD "
 kubectl create deployment nginx --image=nginx
 if [ $? -eq 0 ]; then
-   echo NGINX Apply Done, Please wait
+   echo NGINX Apply Done, Please wait or describe another terminal this pod 'kubectl describe po nginx'
 else
    echo Please describe the nginx deployment
    exit 1
