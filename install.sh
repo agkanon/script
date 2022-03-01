@@ -100,7 +100,8 @@ k3d cluster create --config $DEPLOY_DIR/config.yaml
 if [ $? -eq 0 ]; then
    echo k3d cluster creation done
 else
-   echo Please check status
+   echo Please delete k3d insightdb-cluster
+   k3d cluster delete insightdb-cluster
    exit 1
 fi
 
@@ -117,11 +118,13 @@ else
    echo Please check status
    exit 1
 fi
-kubectl rollout status deployment mysql --timeout 180s
+kubectl rollout status deployment mysql --timeout 300s
 if [ $? -eq 0 ]; then
    echo MYSQL rollout Done, Please go ahead
 else
-   echo Please wait or re-check image pulling situation.
+   echo Please wait or re-check image pulling situation or
+   kubectl delete -f $DEPLOY_DIR/mysql_deployment.yaml 
+   echo Please re-deploy again
    exit 1
 fi
 
