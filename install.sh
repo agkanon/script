@@ -76,10 +76,10 @@ echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
 git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git && cd single-k8s-k3d-deployment
 if [ $? -eq 0 ]; then
          echo git Project cloning done
-         else rm -rf single-k8s-k3d-deployment
-               if [ $? -eq 0 ]; then
-               git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git && cd single-k8s-k3d-deployment
-         if [ $? -eq 0 ]; then
+         else rm -rf single-k8s-k3d-deployment && 
+         git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git 
+         && cd single-k8s-k3d-deployment
+                if [ $? -eq 0 ]; then
           echo git Project cloning done
      else
           echo Please Create proper authentication.
