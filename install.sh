@@ -104,6 +104,7 @@ if [ $? -eq 0 ]; then
 else
    echo Please delete k3d insightdb-cluster
    k3d cluster delete insightdb-cluster
+   echo Please, re-run this script again, Thank you!!!!! 
    exit 1
 fi
 
