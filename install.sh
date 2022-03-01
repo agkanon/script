@@ -6,14 +6,14 @@ DEPLOY_DIR=deployment/insightdb
 KUBECTL_LOCATION=/usr/local/bin/kubectl
 K3D_LOCATION=/usr/local/bin/k3d
 
-echo "Removing................................. old packages"
-sudo yum -y remove docker docker-common docker-selinux docker-engine
-if [ $? -eq 0 ]; then
-   echo OLD Packages Removed
-else
-   echo FAIL 
-   exit 1
-fi
+# echo "Removing................................. old packages"
+# sudo yum -y remove docker docker-common docker-selinux docker-engine
+# if [ $? -eq 0 ]; then
+#    echo OLD Packages Removed
+# else
+#    echo FAIL 
+#    exit 1
+# fi
 
 # Install required packages
 echo "Installing................................Pre-requisite"
@@ -35,7 +35,7 @@ sudo yum install docker-ce -y
 if [ $? -eq 0 ]; then
    echo "Docker Install.....................................Done"
 else
-   echo Please check your internet connectivity 
+   echo Docker installation Failed, Please re-run this script again. Thank You!!!! 
    exit 1
 fi
 
