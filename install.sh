@@ -7,14 +7,14 @@ kubectl=/usr/local/bin/kubectl
 helm=/usr/local/bin/helm
 k3d=/usr/local/bin/k3d
 
-echo "Removing................................. old packages"
-sudo yum -y remove docker docker-common docker-selinux docker-engine
-if [ $? -eq 0 ]; then
-   echo OLD Packages Removed
-else
-   echo FAIL 
-   exit 1
-fi
+# echo "Removing................................. old packages"
+# sudo yum -y remove docker docker-common docker-selinux docker-engine
+# if [ $? -eq 0 ]; then
+#    echo OLD Packages Removed
+# else
+#    echo FAIL 
+#    exit 1
+# fi
 
 # Install required packages
 echo "Installing................................Pre-requisite"
