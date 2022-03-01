@@ -12,7 +12,8 @@ sudo yum -y remove docker docker-common docker-selinux docker-engine
 if [ $? -eq 0 ]; then
    echo OLD Packages Removed
 else
-   echo FAIL exit status: $?
+   echo FAIL 
+   exit 1
 fi
 
 # Install required packages
@@ -22,7 +23,8 @@ sudo yum install -y yum-utils device-mapper-persistent-data lvm2 curl wget git
 if [ $? -eq 0 ]; then
      echo “Success,  Pre-requisite installation Done”
 else
-     echo “Failed, Please check your internet connection. exit status: $?”
+     echo “Failed, Please check your internet connection.”
+     exit 1
 fi
 
 # Configure docker repository
@@ -35,6 +37,7 @@ if [ $? -eq 0 ]; then
    echo "Docker Install.....................................Done"
 else
    echo Please check your internet connectivity 
+   exit 1
 fi
 
 # Start Docker
@@ -46,7 +49,7 @@ echo "Installation  --------------------------------Complete"
 # Download the latest release kubectl
 echo "Download the latest release kubectl...................KUBECTL"
 if [[ -f "$kubectl" ]]; then
-    echo "$kubectl already exists."
+    echo "kubectl already exists."
                 else curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" &&
                 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl &&
                 echo "kubectl>>>>>>>>>Installation>>>>>>>>Done"
@@ -54,7 +57,7 @@ fi
 
 # Description: Install helm
 if [[ -f "$helm" ]]; then
-    echo "$helm already exists."
+    echo "helm already exists."
                 else wget https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz &&
                 tar -xvf helm-v3.6.3-linux-amd64.tar.gz &&
                 mv linux-amd64/helm /usr/local/bin/helm &&
@@ -74,7 +77,8 @@ git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git && cd single-k8s-k3
 if [ $? -eq 0 ]; then
          echo git Project cloning done
 else
-   echo exit, Please Create proper authentication.
+   echo Please Create proper authentication.
+   exit 1
 fi
 
 
@@ -97,6 +101,7 @@ if [ $? -eq 0 ]; then
    echo k3d cluster creation done
 else
    echo Please check status
+   exit 1
 fi
 
 
@@ -110,12 +115,14 @@ if [ $? -eq 0 ]; then
    echo MYSQL Deployment Done, Please wait
 else
    echo Please check status
+   exit 1
 fi
 kubectl rollout status deployment mysql --timeout 180s
 if [ $? -eq 0 ]; then
    echo MYSQL rollout Done, Please go ahead
 else
    echo Please wait or re-check image pulling situation.
+   exit 1
 fi
 
 echo "MYSQL Deployment........................................ Complete"
@@ -127,12 +134,14 @@ if [ $? -eq 0 ]; then
    echo NGINX Deployment Done, Please wait
 else
    echo Please check status
+   exit 1
 fi
 kubectl rollout status deployment nginx --timeout 120s
 if [ $? -eq 0 ]; then
    echo NGINX rollout Done, Please go ahead
 else
    echo Please wait or re-check image pulling situation.
+   exit 1
 fi
 echo "Creating...............................................NGINX Service"
 kubectl create service clusterip nginx --tcp=80:80
@@ -140,6 +149,7 @@ if [ $? -eq 0 ]; then
    echo NGINX service Done, Please go ahead
 else
    echo Please check status
+   exit 1
 fi
 
 kubectl apply -f $DEPLOY_DIR/ingress.yaml
@@ -147,6 +157,7 @@ if [ $? -eq 0 ]; then
    echo ingress Deployment Done, Please go ahead
 else
    echo Please check status
+   exit 1
 fi
 echo "Please hit---------------- 'curl localhost:8081/' on your browser"
 echo "Installation------------------------------------------- Complete"
