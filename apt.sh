@@ -63,20 +63,20 @@ if [[ -f "$KUBECTL_LOCATION" ]]; then
                 echo "kubectl>>>>>>>>>Installation>>>>>>>>Done"
 fi
 
-# git clone 
-# echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
-# rm -rf single-k8s-k3d-deployment/
-# if [ $? -eq 0 ]; then
-#          git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git
-#         if [ $? -eq 0 ]; then
-#         cd single-k8s-k3d-deployment
-#         echo git Project cloning done 
-#      else
-#           echo You have not proper permission for this Project, Please communicate with concern person.
-#    exit 1
-# fi
+#git clone 
+echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
+rm -rf single-k8s-k3d-deployment/
+if [ $? -eq 0 ]; then
+         git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git
+        if [ $? -eq 0 ]; then
+        cd single-k8s-k3d-deployment
+        echo git Project cloning done 
+     else
+          echo You have not proper permission for this Project, Please communicate with concern person.
+   exit 1
+fi
 
-# fi
+fi
 
 
 # Download the latest release K3D
