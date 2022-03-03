@@ -161,7 +161,7 @@ else
    echo Please describe the nginx deployment
    exit 1
 fi
-kubectl rollout status deployment nginx --timeout 120s
+kubectl rollout status deployment nginx 
 if [ $? -eq 0 ]; then
    echo deployment NGINX successfully rolled out, Please go ahead
 else
