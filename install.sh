@@ -54,6 +54,18 @@ if [[ -f "$KUBECTL_LOCATION" ]]; then
                 echo "kubectl>>>>>>>>>Installation>>>>>>>>Done"
 fi
 
+# Download the latest release K3D
+echo "Download k3D binary x64..................................K3D"
+
+
+if [[ -f "$K3D_LOCATION" ]]; then
+    echo "k3d already exists."
+                else curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+                echo "k3d>>>>>>>>>Installation>>>>>>>>Done"
+fi
+
+echo "K3D Installation......................................... Done"
+
 # git clone 
 echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
 rm -rf single-k8s-k3d-deployment/
@@ -69,18 +81,6 @@ fi
 
 fi
 
-
-# Download the latest release K3D
-echo "Download k3D binary x64..................................K3D"
-
-
-if [[ -f "$K3D_LOCATION" ]]; then
-    echo "k3d already exists."
-                else curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-                echo "k3d>>>>>>>>>Installation>>>>>>>>Done"
-fi
-
-echo "K3D Installation......................................... Done"
 
 #Create K3D cluster
 echo "k3d cluster create using--------config-file"
