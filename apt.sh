@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Remove any old versions
-
+TEMP_DIR=$(mktemp -d)
 DEPLOY_DIR=deployment/insightdb
 KUBECTL_LOCATION=/usr/local/bin/kubectl
 K3D_LOCATION=/usr/local/bin/k3d
@@ -63,22 +63,6 @@ if [[ -f "$KUBECTL_LOCATION" ]]; then
                 echo "kubectl>>>>>>>>>Installation>>>>>>>>Done"
 fi
 
-#git clone 
-echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
-rm -rf single-k8s-k3d-deployment/
-if [ $? -eq 0 ]; then
-         git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git
-        if [ $? -eq 0 ]; then
-        cd single-k8s-k3d-deployment
-        echo git Project cloning done 
-     else
-          echo You have not proper permission for this Project, Please communicate with concern person.
-   exit 1
-fi
-
-fi
-
-
 # Download the latest release K3D
 echo "Download k3D binary x64..................................K3D"
 
@@ -91,17 +75,57 @@ fi
 
 echo "K3D Installation......................................... Done"
 
+
+
+#git clone 
+# echo "Cloning from git@gitlab.com:ops52/single-k8s-k3d-deployment.git"
+# rm -rf single-k8s-k3d-deployment/
+# if [ $? -eq 0 ]; then
+#          git clone git@gitlab.com:ops52/single-k8s-k3d-deployment.git
+#         if [ $? -eq 0 ]; then
+#         cd single-k8s-k3d-deployment
+#         echo git Project cloning done 
+#      else
+#           echo You have not proper permission for this Project, Please communicate with concern person.
+#    exit 1
+# fi
+
+# fi
+
+
+
 #Create K3D cluster
+cat <<EOF > $TEMP_DIR/config.yaml
+apiVersion: k3d.io/v1alpha4
+kind: Simple
+metadata:
+ name: my-cluster
+agents: 2
+kubeAPI: 
+  hostPort: "6550" 
+image: rancher/k3s:v1.22.6-k3s1 
+ports:
+  - port: 8081:80
+    nodeFilters:
+      - loadbalancer
+EOF
+
 echo "k3d cluster create using--------config-file"
-k3d cluster create --config $DEPLOY_DIR/config.yaml
-if [ $? -eq 0 ]; then
-   echo k3d cluster creation done
-else
-   echo Please delete k3d insightdb-cluster
-   k3d cluster delete insightdb-cluster
-   echo Please, re-run this script again, Thank you!!!!! 
-   exit 1
-fi
+k3d cluster create --config $TEMP_DIR/config.yaml
+
+
+
+
+# echo "k3d cluster create using--------config-file"
+# k3d cluster create --config $DEPLOY_DIR/config.yaml
+# if [ $? -eq 0 ]; then
+#    echo k3d cluster creation done
+# else
+#    echo Please delete k3d insightdb-cluster
+#    k3d cluster delete insightdb-cluster
+#    echo Please, re-run this script again, Thank you!!!!! 
+#    exit 1
+# fi
 
 
 echo "To check cluster Please hit another terminal .........."kubectl get no"..........."
@@ -109,25 +133,25 @@ kubectl get no
 
 ## Description: Set up MySQL Community Release 5.7
 
-kubectl apply -f $DEPLOY_DIR/mysql_deployment.yaml 
-if [ $? -eq 0 ]; then
-   echo MYSQL Apply Done, Please wait or describe another terminal this pod 'kubectl describe po mysql'
-else
-   echo Please check status
-   exit 1
-fi
-kubectl rollout status deployment mysql 
-if [ $? -eq 0 ]; then
-   echo deployment MYSQL successfully rolled out, Please go ahead
-else
-   echo Please wait or re-check image pulling situation or
-   kubectl delete -f $DEPLOY_DIR/mysql_deployment.yaml 
-   echo Please re-deploy again
-   exit 1
-fi
+# kubectl apply -f $DEPLOY_DIR/mysql_deployment.yaml 
+# if [ $? -eq 0 ]; then
+#    echo MYSQL Apply Done, Please wait or describe another terminal this pod 'kubectl describe po mysql'
+# else
+#    echo Please check status
+#    exit 1
+# fi
+# kubectl rollout status deployment mysql 
+# if [ $? -eq 0 ]; then
+#    echo deployment MYSQL successfully rolled out, Please go ahead
+# else
+#    echo Please wait or re-check image pulling situation or
+#    kubectl delete -f $DEPLOY_DIR/mysql_deployment.yaml 
+#    echo Please re-deploy again
+#    exit 1
+# fi
 
-echo "MYSQL Deployment........................................ Complete"
-echo "Plese execute 'kubectl get po -o wide', when pod is running state then execute 'kubectl exec --stdin --tty pod/{POD_NAME} -c mysql -- /bin/bash' then login mysql"
+# echo "MYSQL Deployment........................................ Complete"
+# echo "Plese execute 'kubectl get po -o wide', when pod is running state then execute 'kubectl exec --stdin --tty pod/{POD_NAME} -c mysql -- /bin/bash' then login mysql"
 
 echo "Deploying...............................................NGINX POD "
 kubectl create deployment nginx --image=nginx
@@ -153,7 +177,31 @@ else
    exit 1
 fi
 
-kubectl apply -f $DEPLOY_DIR/ingress.yaml
+cat <<EOF > $TEMP_DIR/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+EOF              
+
+
+
+kubectl apply -f $TEMP_DIR/ingress.yaml
+
+# kubectl apply -f $DEPLOY_DIR/ingress.yaml
 if [ $? -eq 0 ]; then
    echo ingress Deployment Done, Please go ahead
 else
