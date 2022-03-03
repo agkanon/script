@@ -118,14 +118,14 @@ k3d cluster create --config $TEMP_DIR/config.yaml
 
 # echo "k3d cluster create using--------config-file"
 # k3d cluster create --config $DEPLOY_DIR/config.yaml
-# if [ $? -eq 0 ]; then
-#    echo k3d cluster creation done
-# else
-#    echo Please delete k3d insightdb-cluster
-#    k3d cluster delete insightdb-cluster
-#    echo Please, re-run this script again, Thank you!!!!! 
-#    exit 1
-# fi
+if [ $? -eq 0 ]; then
+   echo k3d cluster creation done
+else
+   echo Please delete k3d insightdb-cluster
+   k3d cluster delete insightdb-cluster
+   echo Please, re-run this script again, Thank you!!!!! 
+   exit 1
+fi
 
 
 echo "To check cluster Please hit another terminal .........."kubectl get no"..........."
