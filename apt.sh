@@ -100,7 +100,7 @@ apiVersion: k3d.io/v1alpha4
 kind: Simple
 metadata:
  name: my-cluster
-agents: 2
+agents: 0
 kubeAPI: 
   hostPort: "6550" 
 image: rancher/k3s:v1.22.6-k3s1 
