@@ -213,8 +213,8 @@ echo "Installation------------------------------------------- Complete"
 
 
 #installing_Pre_requisite
-install_kubectl
-install_k3d
+#install_kubectl
+#install_k3d
 git_cloning
 cluster_deployment
 mysql_deployment
