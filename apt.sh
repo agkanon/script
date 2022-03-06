@@ -216,7 +216,7 @@ echo "Installation------------------------------------------- Complete"
 #install_kubectl
 #install_k3d
 git_cloning
-cluster_deployment
-mysql_deployment
+#cluster_deployment
+#mysql_deployment
 nginx_deployment
 ingress_deployment
