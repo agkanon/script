@@ -212,7 +212,7 @@ echo "Installation------------------------------------------- Complete"
 }
 
 
-installing_Pre_requisite
+#installing_Pre_requisite
 install_kubectl
 install_k3d
 git_cloning
