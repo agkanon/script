@@ -206,8 +206,8 @@ else
    echo Please check status
    exit 1
 fi
-
-echo "Please hit---------------- 'curl localhost:8081/' on your browser"
+export HOST_IP=$(hostname -I | awk '{print $1}')
+echo "Please hit---------------- 'curl $HOST_IP:8081/' on your browser"
 echo "Installation------------------------------------------- Complete"
 }
 
